@@ -1,0 +1,8 @@
+Desktop GUI run steps
+
+1) Activate virtual environment
+venv\Scripts\activate
+
+2) Launch local desktop GUI (not browser)
+venv\Scripts\python InferenceDemo\local_gui.py
+
