@@ -418,7 +418,18 @@ class DesktopTranslatorGUI:
     def _load_runtime_or_fail(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent
         tokenizer_dir = repo_root / "models" / "tokenizer"
-        checkpoint_path = repo_root / "models" / "checkpoints" / "best_model.pt"
+        checkpoint_dir = repo_root / "models" / "checkpoints"
+
+        # Prefer explicit filenames, then fall back to the first available .pt checkpoint.
+        preferred_checkpoints = [
+            checkpoint_dir / "fbest_model.pt",
+            checkpoint_dir / "best_model.pt",
+            checkpoint_dir / "best_model (2).pt",
+        ]
+        checkpoint_path = next((path for path in preferred_checkpoints if path.exists()), None)
+        if checkpoint_path is None:
+            discovered_checkpoints = sorted(checkpoint_dir.glob("*.pt"))
+            checkpoint_path = discovered_checkpoints[0] if discovered_checkpoints else preferred_checkpoints[0]
 
         try:
             self.tokenizer = TranslationTokenizer.load(tokenizer_dir)
@@ -434,7 +445,11 @@ class DesktopTranslatorGUI:
             ).to(self.device)
 
             if not checkpoint_path.exists():
-                raise FileNotFoundError(f"Checkpoint not found at: {checkpoint_path}")
+                expected = "\n".join(str(path) for path in preferred_checkpoints)
+                raise FileNotFoundError(
+                    f"Checkpoint not found. Add one of these files:\n{expected}\n"
+                    f"or place any .pt file inside: {checkpoint_dir}"
+                )
 
             raw_checkpoint = torch.load(checkpoint_path, map_location=self.device)
             state_dict = raw_checkpoint.get("model_state_dict", raw_checkpoint) if isinstance(raw_checkpoint, dict) else raw_checkpoint
