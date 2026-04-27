@@ -420,11 +420,10 @@ class DesktopTranslatorGUI:
         tokenizer_dir = repo_root / "models" / "tokenizer"
         checkpoint_dir = repo_root / "models" / "checkpoints"
 
-        # Prefer explicit filenames, then fall back to the first available .pt checkpoint.
         preferred_checkpoints = [
             checkpoint_dir / "fbest_model.pt",
             checkpoint_dir / "best_model.pt",
-            checkpoint_dir / "best_model (2).pt",
+            checkpoint_dir / "best_model (3).pt",
         ]
         checkpoint_path = next((path for path in preferred_checkpoints if path.exists()), None)
         if checkpoint_path is None:
