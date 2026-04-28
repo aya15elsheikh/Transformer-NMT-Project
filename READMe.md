@@ -25,9 +25,9 @@ The model is designed to translate between **Arabic and English**, leveraging mo
 
 The model is trained using the following datasets:
 
-  ara_.txt dataset
-
-  salehalmansour english-to-arabic dataset
+https://github.com/SamirMoustafa/nmt-with-attention-for-ar-to-en/blob/master/ara_.txt  
+  
+https://huggingface.co/datasets/salehalmansour/english-to-arabic-translate
 
 ---
 
